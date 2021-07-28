@@ -81,6 +81,20 @@ Below are the difference between the versioned environments
 | v3 | no                 | yes                                        | yes                                         | 16x16    |
 
 
+## Setting API server
+
+To initiate the API server you first need to install all dependencies in the **api** extras.
+This installation can be done through `poetry install --extras api`.
+Once the installation is successfull you can initiate the server through
+
+```bash
+uvicorn gym_microts.api:app
+```
+
+The command above will create an endpoint available on *localhost:8000*.
+Go to http://localhost:8000/docs to see available API and how to call them.
+
+
 ## Developer Guide
 
 Highly suggested to use a different environment than the global.
