@@ -1,18 +1,18 @@
 
-import os
 import json
+import os
 import xml.etree.ElementTree as ET
-import numpy as np
-from PIL import Image
 
 import gym
 import gym_microrts
-from gym_microrts import microrts_ai
-
 import jpype
-from jpype.imports import registerDomain
 import jpype.imports
+import numpy as np
+from gym_microrts import microrts_ai
+from jpype.imports import registerDomain
 from jpype.types import JArray
+from PIL import Image
+
 
 class MicroRTSGridModeVecEnv:
     metadata = {
@@ -72,7 +72,14 @@ class MicroRTSGridModeVecEnv:
         # start microrts client
         from rts.units import UnitTypeTable
         self.real_utt = UnitTypeTable()
-        from ai.rewardfunction import RewardFunctionInterface, WinLossRewardFunction, ResourceGatherRewardFunction, AttackRewardFunction, ProduceWorkerRewardFunction, ProduceBuildingRewardFunction, ProduceCombatUnitRewardFunction, CloserToEnemyBaseRewardFunction
+        from ai.rewardfunction import (AttackRewardFunction,
+                                    #    CloserToEnemyBaseRewardFunction,
+                                       ProduceBuildingRewardFunction,
+                                       ProduceCombatUnitRewardFunction,
+                                       ProduceWorkerRewardFunction,
+                                       ResourceGatherRewardFunction,
+                                       RewardFunctionInterface,
+                                       WinLossRewardFunction)
         self.rfs = JArray(RewardFunctionInterface)([
             WinLossRewardFunction(), 
             ResourceGatherRewardFunction(),  
@@ -104,9 +111,10 @@ class MicroRTSGridModeVecEnv:
         ])
 
     def start_client(self):
+        """Start Client to communicate with microRTS environment."""
 
-        from ts import JNIGridnetVecClient as Client
         from ai.core import AI
+        from ts import JNIGridnetVecClient as Client
         self.vec_client = Client(
             self.num_selfplay_envs,
             self.num_bot_envs,
@@ -226,7 +234,14 @@ class MicroRTSBotVecEnv(MicroRTSGridModeVecEnv):
         # start microrts client
         from rts.units import UnitTypeTable
         self.real_utt = UnitTypeTable()
-        from ai.rewardfunction import RewardFunctionInterface, WinLossRewardFunction, ResourceGatherRewardFunction, AttackRewardFunction, ProduceWorkerRewardFunction, ProduceBuildingRewardFunction, ProduceCombatUnitRewardFunction, CloserToEnemyBaseRewardFunction
+        from ai.rewardfunction import (AttackRewardFunction,
+                                       CloserToEnemyBaseRewardFunction,
+                                       ProduceBuildingRewardFunction,
+                                       ProduceCombatUnitRewardFunction,
+                                       ProduceWorkerRewardFunction,
+                                       ResourceGatherRewardFunction,
+                                       RewardFunctionInterface,
+                                       WinLossRewardFunction)
         self.rfs = JArray(RewardFunctionInterface)([
             WinLossRewardFunction(), 
             ResourceGatherRewardFunction(),  
@@ -250,8 +265,8 @@ class MicroRTSBotVecEnv(MicroRTSGridModeVecEnv):
 
     def start_client(self):
 
-        from ts import JNIGridnetVecClient as Client
         from ai.core import AI
+        from ts import JNIGridnetVecClient as Client
         self.vec_client = Client(
             self.max_steps,
             self.rfs,

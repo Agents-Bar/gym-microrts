@@ -11,7 +11,6 @@ https://pypi.org/project/gym-microrts/)
 This repo contains the source code for the gym wrapper of μRTS authored by [Santiago Ontañón](https://github.com/santiontanon/microrts). 
 
 
-
 ![demo.gif](static/fullgame.gif)
 
 ## Technical Paper
@@ -138,6 +137,40 @@ Below are the difference between the versioned environments
 
 
 ## Developer Guide
+
+Highly suggested to use a different environment than the global.
+For example, to set up and activate python's official virtual environment execute
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+This creates `.venv` directory and all packages will be under `.venv/`.
+
+### Submodule
+
+For running tests you might need to checkout `microrts`. Since it's included as a submodule you can check it out using
+```bash
+git submodule update --init --recursive
+```
+
+### Java
+
+To run this environment you need to bundle java code into jar so that jpype can import it.
+Once you checkout `microrts` you need to execute the `build.sh` script from within the microrts directory.
+As mentioned above, the bundle jar needs to be created with Java 8.
+Current LTS is 11 and Sept 2021 will release 17, but Java 8 is supported until 2030 (?!?!).
+
+In case you are using Ubuntu 
+you can install java using `sudo apt install openjdk-8-jdk`.
+This should work even if you have newer Java version but then you need to switch current java version using
+```bash
+sudo update-alternatives --config java
+sudo update-alternatives --config javac
+```
+or update link to `/usr/bin/javac` from `/usr/lib/jvm
+
+### Other
 
 Required dev environment
 ```
