@@ -11,12 +11,6 @@ JPype1 = "^1.3.0"
 
 [tool.poetry.dev-dependencies]
 poetry-dynamic-versioning = "^0.13.0"
-spyder = "^5.0.5"
-tensorboard = "^2.5.0"
-wandb = "^0.11.0"
-trueskill = "^0.4.5"
-stable-baselines3 = "^1.1.0"
-torch = "1.7.1"
 
 [tool.poetry-dynamic-versioning]
 enable = true

@@ -1,9 +1,10 @@
 import time
+import traceback
 
 import numpy as np
 
 from gym_microrts import microrts_ai
-from gym_microrts.envs.vec_env import MicroRTSBotVecEnv
+from gym_microrts.envs.bot_vec_env import MicroRTSBotVecEnv
 
 env = None
 try:
@@ -29,7 +30,7 @@ try:
             print(reward)
 
 except Exception as e:
-    e.printStackTrace()
+    print(traceback.format_exc())
 finally:
     if env:
         env.close()
