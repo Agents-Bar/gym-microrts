@@ -162,9 +162,7 @@ def commit(env: Environment, actions: ActionType) -> EnvStepType:
         or after passing to the environment.
     """
     try:
-        print(actions)
-        _actions = [actions]
-        out = env.step(_actions)
+        out = env.step([actions])
     except Exception as e:
         logging.exception("Something wrong while commiting step")
         raise HTTPException(500, str(e))
