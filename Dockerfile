@@ -10,6 +10,11 @@ RUN pip3 install uvicorn~=0.14.0 fastapi~=0.67.0
 
 COPY ./ /app
 
+WORKDIR /app/gym_microrts/microrts
+RUN cp /app/build.sh .
+RUN bash build.sh
+
+WORKDIR /app/gym_microrts
 LABEL agents-bar-env-api=v0.1.0
 LABEL gym-microrts=v0.1.0
 
