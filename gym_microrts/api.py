@@ -120,15 +120,15 @@ def set_seed(seed: int) -> None:
 
 def extract_space_info(space) -> Dict[str, Any]:
     if isinstance(space, gym.spaces.multi_discrete.MultiDiscrete):
-        return dict(type=str(space.dtype), shape=to_list(space.nvec))
+        return dict(dtype=str(space.dtype), shape=to_list(space.nvec))
     elif "Discret" in str(space):
-        return dict(type=str(space.dtype), shape=space.n)
+        return dict(dtype=str(space.dtype), shape=space.n)
     else:
         return {
             "low": space.low.tolist(),
             "high": space.high.tolist(),
             "shape": space.shape,
-            "type": str(space.dtype),
+            "dtype": str(space.dtype),
         }
     
 
