@@ -1,30 +1,13 @@
 import logging
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, Optional, Union
 
-import gym
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-import pydantic
 
-from gym_microrts.microrts_ai import coacAI
 from gym_microrts.envs import MicroRTSBotVecEnv, MicroRTSGridModeVecEnv
-from gym_microrts.utils import to_list, to_numpy
-
-ActionType = List[List[int]]
-StepType = List[int]
-ObservationType = Any
-RewardType = Any
-
-class EnvStepType(BaseModel):
-    observation: ObservationType
-    reward: List[RewardType]
-    done: List[bool]
-    info: Dict
-
-class EnvActionType(BaseModel):
-    actions: ActionType
-    commit: bool = True
-
+from gym_microrts.microrts_ai import coacAI
+from gym_microrts.types import (ActionType, EnvActionType, EnvStepType,
+                                ObservationType, StepType)
+from gym_microrts.utils import extract_space_info, to_list, to_numpy
 
 app = FastAPI(title="Gym MicroRTS")
 Environment = Union[MicroRTSGridModeVecEnv, MicroRTSBotVecEnv]
@@ -64,7 +47,7 @@ def init_env(config: Optional[Dict[str, Any]] = None):
             ai2s=ai2s,
             map_path=map_path,
             reward_weight=to_numpy(reward_weight)
-)
+        )
     else:
         env = MicroRTSBotVecEnv()
 
@@ -98,8 +81,12 @@ def post_step(env_action: EnvActionType):
 def post_commit() -> EnvStepType:
     "Commit last sent step data."
     global env, last_actions, last_step
+    if last_actions is None:
+        raise HTTPException(400, "Cannot commit action without passing action. Please use `/env/step` first.")
     env = check_env(env)
     last_step = commit(env, last_actions)
+    # Clear action after commiting
+    last_actions = None
     return last_step
 
 
@@ -118,19 +105,6 @@ def set_seed(seed: int) -> None:
     env.seed(seed)
     return None
 
-def extract_space_info(space) -> Dict[str, Any]:
-    if isinstance(space, gym.spaces.multi_discrete.MultiDiscrete):
-        return dict(dtype=str(space.dtype), shape=to_list(space.nvec))
-    elif "Discret" in str(space):
-        return dict(dtype=str(space.dtype), shape=space.n)
-    else:
-        return {
-            "low": space.low.tolist(),
-            "high": space.high.tolist(),
-            "shape": space.shape,
-            "dtype": str(space.dtype),
-        }
-    
 
 @app.get('/env/info')
 def get_env_info() -> Dict[str, Any]:
